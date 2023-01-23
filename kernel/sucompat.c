@@ -62,7 +62,11 @@ int ksu_handle_faccessat(int *dfd, const char __user **filename_user, int *mode,
 	return 0;
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0)
 int ksu_handle_stat(int *dfd, const char __user **filename_user, int *flags)
+#else
+int ksu_handle_stat(int *dfd, const char __user **filename_user)
+#endif
 {
 	// const char sh[] = SH_PATH;
 	struct filename *filename;
@@ -136,9 +140,13 @@ static int newfstatat_handler_pre(struct kprobe *p, struct pt_regs *regs)
 {
 	int *dfd = (int *)PT_REGS_PARM1(regs);
 	const char __user **filename_user = (const char **)&PT_REGS_PARM2(regs);
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0)
 	int *flags = (int *)&PT_REGS_PARM3(regs);
 
 	return ksu_handle_stat(dfd, filename_user, flags);
+#else
+	return ksu_handle_stat(dfd, filename_user);
+#endif
 }
 
 // https://elixir.bootlin.com/linux/v5.10.158/source/fs/exec.c#L1864
@@ -165,7 +173,11 @@ static struct kprobe faccessat_kp = {
 };
 
 static struct kprobe newfstatat_kp = {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0)
 	.symbol_name = "vfs_statx",
+#else
+	.symbol_name = "vfs_fstatat",
+#endif
 	.pre_handler = newfstatat_handler_pre,
 };
 
