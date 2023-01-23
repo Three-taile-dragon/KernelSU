@@ -5,10 +5,6 @@
 #include "ss/services.h"
 #include "../klog.h" // IWYU pragma: keep
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
-#define SELINUX_POLICY_INSTEAD_SELINUX_SS
-#endif
-
 #define KERNEL_SU_DOMAIN "su"
 #define KERNEL_SU_FILE "ksu_file"
 #define ALL NULL
