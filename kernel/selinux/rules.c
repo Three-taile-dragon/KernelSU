@@ -1,10 +1,5 @@
-#include <linux/version.h>
 #include "sepolicy.h"
 #include "selinux.h"
-
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
-#define SELINUX_POLICY_INSTEAD_SELINUX_SS
-#endif
 
 #ifndef SELINUX_POLICY_INSTEAD_SELINUX_SS
 #include <ss/services.h>
