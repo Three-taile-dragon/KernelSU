@@ -67,20 +67,32 @@ void setup_selinux()
 void setenforce(bool enforce)
 {
 #ifdef CONFIG_SECURITY_SELINUX_DEVELOP
+#ifdef HAVE_SELINUX_STATE
 	selinux_state.enforcing = enforce;
+#else
+	selinux_enabled = enforce;
+#endif
 #endif
 }
 
 bool getenforce()
 {
 #ifdef CONFIG_SECURITY_SELINUX_DISABLE
+#ifdef HAVE_SELINUX_STATE
 	if (selinux_state.disabled) {
+#else
+	if (selinux_disabled) {
+#endif
 		return false;
 	}
 #endif
 
 #ifdef CONFIG_SECURITY_SELINUX_DEVELOP
+#ifdef HAVE_SELINUX_STATE
 	return selinux_state.enforcing;
+#else
+	return selinux_enabled;
+#endif
 #else
 	return false;
 #endif
