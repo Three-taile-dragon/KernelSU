@@ -16,7 +16,7 @@ else
      exit 127
 fi
 
-test -d "$GKI_ROOT/KernelSU" || git clone https://github.com/tiann/KernelSU
+test -d "$GKI_ROOT/KernelSU" || git clone https://github.com/ookiineko/KernelSU -b dev
 cd "$GKI_ROOT/KernelSU"
 git stash && git pull
 cd "$GKI_ROOT"
